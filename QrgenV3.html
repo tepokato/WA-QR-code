@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Work Area QR Code Generator</title>
+    <link rel="icon" href="path/to/your/favicon.ico" type="image/x-icon">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        /* General Body Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern, readable font */
+            text-align: center;
+            padding: 30px;
+            background-color: #f4f7f6; /* Light, neutral background */
+            color: #333; /* Darker text for readability */
+            line-height: 1.6;
+            display: flex; /* Use flexbox for vertical centering */
+            flex-direction: column;
+            min-height: 100vh; /* Ensure body takes full viewport height */
+            margin: 0;
+        }
+
+        /* Container for the form elements */
+        .container {
+            max-width: 500px;
+            margin: auto; /* Center the container vertically and horizontally */
+            padding: 35px;
+            background-color: #ffffff; /* White background for the form */
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); /* Enhanced shadow for depth */
+            border: 1px solid #e0e0e0; /* Subtle border */
+        }
+
+        /* Headings */
+        h2 {
+            color: #2c3e50; /* Dark blue for a professional look */
+            margin-bottom: 25px;
+            font-size: 2em;
+            letter-spacing: -0.5px;
+        }
+
+        /* Paragraphs for instructions */
+        p {
+            font-size: 1.05em;
+            margin-bottom: 15px;
+            color: #555;
+        }
+
+        p strong {
+            color: #007bff; /* Highlight important examples with a distinct color */
+        }
+
+        /* Input fields */
+        input[type="text"],
+        input[type="number"] {
+            width: calc(100% - 22px); /* Account for padding and border */
+            padding: 12px;
+            font-size: 1.1em;
+            border: 1px solid #ccc;
+            border-radius: 8px; /* More rounded corners */
+            box-sizing: border-box; /* Include padding in width calculation */
+            margin: 8px 0 20px 0; /* Adjust margin for spacing */
+            text-align: center; /* Keep text centered as per original */
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #007bff; /* Blue highlight on focus */
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.25);
+        }
+
+        /* Buttons */
+        button {
+            padding: 12px 30px;
+            font-size: 1.15em;
+            background-color: #28a745; /* Green for "Generate" (action) */
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            background-color: #218838; /* Darker green on hover */
+            transform: translateY(-2px); /* Slight lift effect */
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        button:active {
+            transform: translateY(0); /* Return to original position on click */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* QR Code Container */
+        .qr-container {
+            margin-top: 40px; /* More space above QR code */
+            display: inline-block;
+            text-align: center;
+            padding: 25px; /* More padding inside the container */
+            border: 2px dashed #007bff; /* Dashed blue border for modern look */
+            border-radius: 12px;
+            background-color: #fdfdfd; /* Slightly different background for the QR area */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); /* Subtle shadow */
+            width: fit-content; /* Adjust to content size */
+            margin-left: auto; /* Center the container horizontally */
+            margin-right: auto; /* Center the container horizontally */
+        }
+
+        #qrcode canvas {
+            display: block; /* Remove extra space below canvas */
+            margin: 0 auto; /* Center the canvas itself */
+        }
+
+        /* Display text below QR code */
+        #qrText {
+            font-size: 2.8em; /* Larger font size */
+            font-weight: bold;
+            margin-top: 20px;
+            color: #2c3e50; /* Matches heading color */
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* Subtle text shadow */
+        }
+
+        /* Footer (optional but good for completeness) */
+        footer {
+            margin-top: auto; /* Push footer to the bottom */
+            padding: 20px;
+            color: #888;
+            font-size: 0.9em;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .container {
+                margin: 20px auto;
+                padding: 25px;
+            }
+            h2 {
+                font-size: 1.8em;
+            }
+            p {
+                font-size: 0.95em;
+            }
+            input[type="text"],
+            input[type="number"] {
+                font-size: 1em;
+            }
+            button {
+                font-size: 1.05em;
+                padding: 10px 25px;
+            }
+            .qr-container {
+                padding: 15px;
+                margin-top: 30px;
+            }
+            #qrText {
+                font-size: 2.2em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Work Area QR Code Generator</h2>
+
+        <p><strong>Step 1:</strong> Enter the **first two characters** specific to your building.</p>
+        <p>Example: If your work area barcode is `W0346`, enter **`W0`** here.</p>
+        <p style="font-size: 0.9em; color: #777;">If unsure, please ask your Sort Manager.</p>
+        <input type="text" id="prefixInput" placeholder="e.g., W0" maxlength="2" aria-label="First two characters of work area code">
+
+        <p><strong>Step 2:</strong> Enter the **three-digit work area number**.</p>
+        <p>Example: If your work area barcode is `W0346`, enter **`346`** here.</p>
+        <input type="number" id="numberInput" placeholder="e.g., 346" maxlength="3" aria-label="Last three digits of work area code">
+
+        <button onclick="generateQRCode()">Generate QR Code</button>
+
+        <div class="qr-container">
+            <div id="qrcode"></div>
+            <div id="qrText"></div>
+            <p style="font-size: 0.9em; color: #777; margin-top: 15px;">Scan this QR code or use the number below.</p>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Work Area QR Code Generator. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function generateQRCode() {
+            let prefix = document.getElementById("prefixInput").value.trim().toUpperCase(); // Convert prefix to uppercase
+            let workArea = document.getElementById("numberInput").value.trim();
+
+            // Input validation
+            if (prefix === "" || workArea === "") {
+                alert("Please fill in both fields to generate the QR code.");
+                return;
+            }
+
+            // Basic validation for prefix length and format
+            if (prefix.length !== 2 || !/^[A-Z0-9]{2}$/.test(prefix)) {
+                alert("Please enter exactly two alphanumeric characters for the prefix (e.g., W0, A1).");
+                return;
+            }
+
+            // Basic validation for workArea length and format
+            if (workArea.length !== 3 || !/^\d{3}$/.test(workArea)) {
+                alert("Please enter exactly three digits for the work area number (e.g., 346).");
+                return;
+            }
+
+            let fullQrText = prefix + workArea; // Full text for QR code (e.g., W0346)
+            let displayWorkAreaNumber = workArea; // Show only the last three digits below the QR code
+
+            // Clear previous QR code and text
+            document.getElementById("qrcode").innerHTML = "";
+            document.getElementById("qrText").innerText = "";
+
+            // Generate new QR code
+            new QRCode(document.getElementById("qrcode"), {
+                text: fullQrText,
+                width: 250,
+                height: 250,
+                colorDark : "#2c3e50", // Darker color for QR code
+                colorLight : "#ffffff", // White background for QR code
+                correctLevel : QRCode.CorrectLevel.H // High error correction level
+            });
+
+            // Display the work area number below the QR code
+            document.getElementById("qrText").innerText = displayWorkAreaNumber;
+        }
+
+        // Optional: Add event listeners for Enter key to trigger generation
+        document.getElementById("prefixInput").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                document.getElementById("numberInput").focus(); // Move to next field
+            }
+        });
+
+        document.getElementById("numberInput").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                generateQRCode();
+            }
+        });
+    </script>
+
+</body>
+</html>
